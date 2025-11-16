@@ -1076,3 +1076,22 @@ https://www.facebook.com/share/v/19oAopSCtz/
 
                                                 دریں دانک نیکراھی دیوان
                                                 https://chat.whatsapp.com/LPCTPYuG2cv5hj2qCGbPyl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                   self.prefixes = ["بے", "نا", "بی", "بد", "بر", "وا", "در", "ھر"]
+        self.suffixes = ["اں","ان", "ئے", "ئی", "یں", "انی", "ئیں","باں", "بان","ائی"]
+        self.clitics = ["=ی", "=ن"]
