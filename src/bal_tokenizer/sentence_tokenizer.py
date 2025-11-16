@@ -1,6 +1,6 @@
 # src/bal_tokenizer/sentence_tokenizer.py
 import re
-from typing import List, Dict
+from typing import Dict, List
 
 
 class BalochiSentenceTokenizer:

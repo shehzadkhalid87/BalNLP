@@ -101,3 +101,4 @@ tmp/
 Data/
 
 .coverage/
+* .json

@@ -1,21 +1,26 @@
 import argparse
 import json
 import sys
-from typing import Dict, Optional, Union
+from pathlib import Path
+from typing import Dict, Optional, Union, List
 
-from src import BalochiTextNormalizer, BalochiWordTokenizer, BalochiSentenceTokenizer, BalochiTextCleaner
+from bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
+from bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
+from preprocessing.text_clearner import BalochiTextCleaner
+from preprocessing.text_normalizer import BalochiTextNormalizer
 
 
 def read_text_file(file_path: str) -> str:
-    """Read text from a file."""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return f.read()
+    file_path = Path(file_path)
+    if not file_path.exists():
+        raise FileNotFoundError(f"Input file '{file_path}' does not exist.")
+    return file_path.read_text(encoding="utf-8")
 
 
 def write_output(output: Dict[str, Union[str, int, list]], output_file: Optional[str] = None) -> None:
-    """Write output to file or stdout."""
     output_json = json.dumps(output, ensure_ascii=False, indent=2)
     if output_file:
+        Path(output_file).parent.mkdir(parents=True, exist_ok=True)
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(output_json)
     else:
@@ -23,18 +28,17 @@ def write_output(output: Dict[str, Union[str, int, list]], output_file: Optional
 
 
 def preprocess_text(
-        text: str,
-        remove_urls: bool = True,
-        remove_emails: bool = True,
-        remove_numbers: bool = True,
-        remove_emojis: bool = True,
-        remove_special: bool = True,
-        keep_chars: Optional[list] = None,
-        remove_diacritics: bool = True
+    text: str,
+    remove_urls: bool = True,
+    remove_emails: bool = True,
+    remove_numbers: bool = True,
+    remove_emojis: bool = True,
+    remove_special: bool = True,
+    keep_chars: Optional[List[str]] = None,
+    remove_diacritics: bool = True,
 ) -> Dict[str, Union[str, list, int]]:
     """Full preprocessing pipeline: clean, normalize, tokenize."""
 
-    # 1️⃣ Clean
     cleaner = BalochiTextCleaner()
     cleaned_text = cleaner.clean_text(
         text,
@@ -46,15 +50,12 @@ def preprocess_text(
         keep_chars=keep_chars,
     )
 
-    # 2️⃣ Normalize
     normalizer = BalochiTextNormalizer()
     normalized_text = normalizer.normalize_text(cleaned_text, remove_diacritics=remove_diacritics)
 
-    # 3️⃣ Word tokenize
     word_tokenizer = BalochiWordTokenizer()
     words = word_tokenizer.tokenize(normalized_text)
 
-    # 4️⃣ Sentence tokenize
     sentence_tokenizer = BalochiSentenceTokenizer()
     sentences = sentence_tokenizer.tokenize(normalized_text)
 
@@ -72,16 +73,17 @@ def preprocess_text(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Full Balochi NLP preprocessing pipeline")
+    parser = argparse.ArgumentParser(description="BalNLP: Full Balochi NLP preprocessing pipeline")
     parser.add_argument("input_file", help="Input text file path")
     parser.add_argument("--output", "-o", help="Output JSON file path")
-    parser.add_argument("--remove-urls", action="store_true", help="Remove URLs from text")
+    parser.add_argument("--remove-urls", action="store_true", help="Remove URLs")
     parser.add_argument("--remove-emails", action="store_true", help="Remove emails")
     parser.add_argument("--remove-numbers", action="store_true", help="Remove numbers")
     parser.add_argument("--remove-emojis", action="store_true", help="Remove emojis")
     parser.add_argument("--remove-special", action="store_true", help="Remove special characters")
-    parser.add_argument("--keep-chars", help="Comma-separated special characters to keep")
+    parser.add_argument("--keep-chars", help="Comma-separated special characters to keep, e.g. 'ء,۔'")
     parser.add_argument("--remove-diacritics", action="store_true", help="Remove diacritics during normalization")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Print processing steps")
     args = parser.parse_args()
 
     try:
@@ -91,6 +93,9 @@ def main():
         sys.exit(1)
 
     keep_chars = args.keep_chars.split(",") if args.keep_chars else None
+
+    if args.verbose:
+        print("Starting preprocessing pipeline...")
 
     try:
         output = preprocess_text(
@@ -112,6 +117,9 @@ def main():
     except Exception as e:
         print(f"Error writing output: {e}", file=sys.stderr)
         sys.exit(1)
+
+    if args.verbose:
+        print("Preprocessing complete.")
 
 
 if __name__ == "__main__":

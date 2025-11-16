@@ -90,7 +90,7 @@ class BalochiStopwordRemover:
 
     def remove_stopwords_from_list(self, words: List[str]) -> List[str]:
         """Remove stopwords from a list of words."""
-        return [word for word in words if not self.is_stopword(word)]
+        return [w for w in words if not self.is_stopword(w)]
 
     def add_stopwords(self, new_stopwords: Set[str]) -> None:
         """Add new stopwords to the existing set."""

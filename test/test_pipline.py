@@ -4,7 +4,7 @@ from src import BalochiTextNormalizer, BalochiWordTokenizer, BalochiSentenceToke
 # Assuming you have a BalochiStopwordRemover or TextCleaner
 from src.preprocessing.stopwords import BalochiStopwordRemover
 
-input_file = "/home/python-dev/BalNLP/Data"
+input_file = "/data/data.txt"
 output_file = "data/balochi_sample_output.json"
 
 # Ensure output directory exists
