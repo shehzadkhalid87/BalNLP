@@ -1,4 +1,4 @@
-from balochi_nlp.preprocessing.cleaner import BalochiTextCleaner
+from balnlp.preprocessing.text_clearner import BalochiTextCleaner
 
 # Initialize the cleaner
 cleaner = BalochiTextCleaner()

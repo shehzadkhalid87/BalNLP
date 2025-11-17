@@ -1,8 +1,11 @@
 import os
 import json
-from src import BalochiTextNormalizer, BalochiWordTokenizer, BalochiSentenceTokenizer, BalochiTextCleaner
-# Assuming you have a BalochiStopwordRemover or TextCleaner
-from src.preprocessing.stopwords import BalochiStopwordRemover
+
+from balnlp.bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
+from balnlp.preprocessing.stopwords import BalochiStopwordRemover
+from balnlp.preprocessing.text_clearner import BalochiTextCleaner
+from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 input_file = "/data/data.txt"
 output_file = "data/balochi_sample_output.json"

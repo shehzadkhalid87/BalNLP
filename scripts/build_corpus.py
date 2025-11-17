@@ -3,9 +3,9 @@ import os
 import json
 from tqdm import tqdm
 
-from preprocessing.stopwords import BalochiStopwordRemover
-from preprocessing.text_clearner import BalochiTextCleaner
-from preprocessing.text_normalizer import BalochiTextNormalizer
+from balnlp.preprocessing.stopwords import BalochiStopwordRemover
+from balnlp.preprocessing.text_clearner import BalochiTextCleaner
+from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 
 def build_corpus(input_dir: str, output_file: str, remove_stopwords=True):

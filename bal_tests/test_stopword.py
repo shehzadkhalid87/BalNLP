@@ -4,7 +4,7 @@ import os
 import tempfile
 from pathlib import Path
 import pytest
-from src.preprocessing.stopwords import BalochiStopwordRemover
+from balnlp.preprocessing.stopwords import BalochiStopwordRemover
 
 @pytest.fixture
 def default_remover():

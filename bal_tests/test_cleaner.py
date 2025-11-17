@@ -1,7 +1,8 @@
 """Tests for BalochiTextCleaner."""
 
 import pytest
-from src.preprocessing.text_clearner import BalochiTextCleaner
+
+from balnlp.preprocessing.text_clearner import BalochiTextCleaner
 
 
 @pytest.fixture

@@ -1,7 +1,7 @@
 """Tests for BalochiTextNormalizer."""
 
 import pytest
-from src.preprocessing.text_normalizer import BalochiTextNormalizer
+from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 
 @pytest.fixture

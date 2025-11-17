@@ -4,10 +4,10 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional, Union, List
 
-from bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
-from bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
-from preprocessing.text_clearner import BalochiTextCleaner
-from preprocessing.text_normalizer import BalochiTextNormalizer
+from balnlp.bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
+from balnlp.preprocessing.text_clearner import BalochiTextCleaner
+from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 
 def read_text_file(file_path: str) -> str:
