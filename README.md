@@ -112,19 +112,21 @@ pre-commit install
 pre-commit run --all-files
 
 # Contributing
+```
 Fork the repository
 
 Create a new branch: git checkout -b feature/your-feature
 
 Make changes and add tests
 
-```Ensure linting passes and run pytest
+Ensure linting passes and run pytest
 
 Commit your changes: git commit -m "Add your feature"
 
 Push to branch: git push origin feature/your-feature
 
-Create a Pull Reques```t
+Create a Pull Reques
+```
 
 # License
 This project is licensed under the MIT License. See the LICENSE file for details.
