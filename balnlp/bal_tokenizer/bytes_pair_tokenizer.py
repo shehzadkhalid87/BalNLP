@@ -1,7 +1,7 @@
 import json
 import os
-from typing import List, Dict, Optional
-from collections import Counter, defaultdict
+from collections import Counter
+from typing import Dict, List, Optional
 
 
 class BalBPETokenizer:
@@ -9,7 +9,9 @@ class BalBPETokenizer:
     Byte Pair Encoding (BPE) tokenizer for Balochi text.
     """
 
-    def __init__(self, vocab_size: int = 5000, special_tokens: Optional[List[str]] = None):
+    def __init__(
+        self, vocab_size: int = 5000, special_tokens: Optional[List[str]] = None
+    ):
         self.vocab_size = vocab_size
         self.special_tokens = special_tokens or ["<pad>", "<unk>", "<s>", "</s>"]
         self.vocab = {}
@@ -70,14 +72,18 @@ class BalBPETokenizer:
             vocab[char] = idx
 
         # Add space as a special character
-        vocab[' '] = len(vocab)
+        vocab[" "] = len(vocab)
 
         return vocab
 
-    def _learn_bpe(self, word_freqs: Counter, num_merges: int = None) -> Dict[tuple, int]:
+    def _learn_bpe(
+        self, word_freqs: Counter, num_merges: int = None
+    ) -> Dict[tuple, int]:
         """Learn BPE merges."""
         if num_merges is None:
-            num_merges = self.vocab_size - len(self.special_tokens) - 100  # Reserve space for chars
+            num_merges = (
+                self.vocab_size - len(self.special_tokens) - 100
+            )  # Reserve space for chars
 
         vocab = {word: list(word) for word in word_freqs}
         merges = {}
@@ -149,8 +155,8 @@ class BalBPETokenizer:
                 current_idx += 1
 
         # Add space if not already there
-        if ' ' not in self.vocab:
-            self.vocab[' '] = current_idx
+        if " " not in self.vocab:
+            self.vocab[" "] = current_idx
             current_idx += 1
 
         self.inverse_vocab = {v: k for k, v in self.vocab.items()}
@@ -171,7 +177,7 @@ class BalBPETokenizer:
 
             # Add space between words (except after last word)
             if i < len(words) - 1:
-                token_ids.append(self.vocab.get(' ', self.vocab['<unk>']))
+                token_ids.append(self.vocab.get(" ", self.vocab["<unk>"]))
 
         return token_ids
 
@@ -218,7 +224,7 @@ class BalBPETokenizer:
                     if char in self.vocab:
                         token_ids.append(self.vocab[char])
                     else:
-                        token_ids.append(self.vocab['<unk>'])
+                        token_ids.append(self.vocab["<unk>"])
 
         return token_ids
 
@@ -232,13 +238,13 @@ class BalBPETokenizer:
             if token_id in self.inverse_vocab:
                 token = self.inverse_vocab[token_id]
                 # Skip special tokens except space
-                if token in self.special_tokens and token != ' ':
+                if token in self.special_tokens and token != " ":
                     continue
                 tokens.append(token)
             else:
-                tokens.append('?')
+                tokens.append("?")
 
-        return ''.join(tokens)
+        return "".join(tokens)
 
     def save(self, save_dir: str):
         """Save tokenizer files."""
@@ -248,10 +254,12 @@ class BalBPETokenizer:
         config = {
             "vocab_size": len(self.vocab),
             "special_tokens": self.special_tokens,
-            "trained": self.trained
+            "trained": self.trained,
         }
 
-        with open(os.path.join(save_dir, "tokenizer_config.json"), "w", encoding="utf-8") as f:
+        with open(
+            os.path.join(save_dir, "tokenizer_config.json"), "w", encoding="utf-8"
+        ) as f:
             json.dump(config, f, ensure_ascii=False, indent=2)
 
         # Save vocabulary
@@ -261,12 +269,14 @@ class BalBPETokenizer:
         # Save merges
         merges_list = [f"{pair[0]} {pair[1]}" for pair in self.merges.keys()]
         with open(os.path.join(save_dir, "merges.txt"), "w", encoding="utf-8") as f:
-            f.write('\n'.join(merges_list))
+            f.write("\n".join(merges_list))
 
     def load(self, save_dir: str):
         """Load tokenizer from files."""
         # Load config
-        with open(os.path.join(save_dir, "tokenizer_config.json"), "r", encoding="utf-8") as f:
+        with open(
+            os.path.join(save_dir, "tokenizer_config.json"), "r", encoding="utf-8"
+        ) as f:
             config = json.load(f)
 
         # Load vocabulary

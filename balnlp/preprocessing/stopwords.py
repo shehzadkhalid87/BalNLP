@@ -37,8 +37,7 @@ def load_stopwords(filepath: str) -> Set[str]:
         return stopwords
     except FileNotFoundError:
         raise FileNotFoundError(
-            f"Stopwords file not found at {filepath}. "
-            "Please ensure the file exists."
+            f"Stopwords file not found at {filepath}. " "Please ensure the file exists."
         )
 
 

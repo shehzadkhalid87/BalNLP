@@ -19,7 +19,18 @@ class BalochiWordTokenizer:
 
         # Common Balochi prefixes and suffixes
         self.prefixes = ["بے", "نا", "بی", "بد", "بر", "وا", "در", "ھر"]
-        self.suffixes = ["اں", "ان", "ئے", "ئی", "یں", "انی", "ئیں", "باں", "بان", "ائی"]
+        self.suffixes = [
+            "اں",
+            "ان",
+            "ئے",
+            "ئی",
+            "یں",
+            "انی",
+            "ئیں",
+            "باں",
+            "بان",
+            "ائی",
+        ]
 
         # Enclitics
         self.clitics = ["=ی", "=ن"]
@@ -58,7 +69,7 @@ class BalochiWordTokenizer:
         for clitic in self.clitics:
             if root.endswith(clitic):
                 clitics_found.append(clitic)
-                root = root[:-len(clitic)]
+                root = root[: -len(clitic)]
 
         # ---- Extract MULTIPLE prefixes ----
         prefix_changed = True
@@ -67,7 +78,7 @@ class BalochiWordTokenizer:
             for prefix in self.prefixes:
                 if root.startswith(prefix):
                     prefixes_found.append(prefix)
-                    root = root[len(prefix):]
+                    root = root[len(prefix) :]
                     prefix_changed = True
 
         # ---- Extract MULTIPLE suffixes ----
@@ -77,7 +88,7 @@ class BalochiWordTokenizer:
             for suffix in self.suffixes:
                 if root.endswith(suffix):
                     suffixes_found.append(suffix)
-                    root = root[:-len(suffix)]
+                    root = root[: -len(suffix)]
                     suffix_changed = True
 
         # Edge case: avoid empty roots
@@ -89,7 +100,7 @@ class BalochiWordTokenizer:
             root=root,
             prefixes=prefixes_found,
             suffixes=suffixes_found,
-            clitics=clitics_found
+            clitics=clitics_found,
         )
 
     # ---------------------------------------------------------
@@ -98,4 +109,3 @@ class BalochiWordTokenizer:
     def tokenize_with_affixes(self, text: str) -> List[TokenInfo]:
         tokens = self.tokenize(text)
         return [self.split_affixes_and_clitics(t) for t in tokens]
-

@@ -1,6 +1,6 @@
 # src/preprocessing/cleaner.py
 import re
-from typing import Optional, List
+from typing import List, Optional
 
 
 class BalochiTextCleaner:
@@ -64,26 +64,31 @@ class BalochiTextCleaner:
         return " ".join(tokens)
 
     def clean_text(
-            self,
-            text: str,
-            remove_urls: bool = True,
-            remove_emails: bool = True,
-            remove_numbers: bool = True,
-            remove_emojis: bool = True,
-            preserve_special_chars: bool = True,
-            keep_chars: Optional[List[str]] = None,
+        self,
+        text: str,
+        remove_urls: bool = True,
+        remove_emails: bool = True,
+        remove_numbers: bool = True,
+        remove_emojis: bool = True,
+        preserve_special_chars: bool = True,
+        keep_chars: Optional[List[str]] = None,
     ) -> str:
         text = text.strip()
-        if remove_urls: text = self.remove_urls(text)
-        if remove_emails: text = self.remove_emails(text)
-        if remove_emojis: text = self.remove_emojis(text)
+        if remove_urls:
+            text = self.remove_urls(text)
+        if remove_emails:
+            text = self.remove_emails(text)
+        if remove_emojis:
+            text = self.remove_emojis(text)
         if preserve_special_chars:
             allowed = "".join(keep_chars) if keep_chars else "ءُءَءِ"
             text = re.sub(rf"[^\w\s{re.escape(allowed)}]", " ", text)
         else:
             text = re.sub(r"[^\w\s]", " ", text)
         text = self.remove_non_balochi(text)
-        if remove_numbers: text = self.remove_numbers(text)
+        if remove_numbers:
+            text = self.remove_numbers(text)
         text = self.normalize_whitespace(text)
-        if preserve_special_chars: text = self.process_special_chars(text)
+        if preserve_special_chars:
+            text = self.process_special_chars(text)
         return text

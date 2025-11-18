@@ -33,7 +33,7 @@ class ExactDedup:
         Returns:
             Normalized text in NFC form
         """
-        return unicodedata.normalize('NFC', text)
+        return unicodedata.normalize("NFC", text)
 
     def remove_exact_duplicates(self, documents: Iterable[str]) -> List[str]:
         """
@@ -87,7 +87,9 @@ class ExactDedup:
 
         return unique
 
-    def remove_duplicates_with_whitespace_normalization(self, documents: Iterable[str]) -> List[str]:
+    def remove_duplicates_with_whitespace_normalization(
+        self, documents: Iterable[str]
+    ) -> List[str]:
         """
         Remove duplicates after normalizing whitespace.
 
@@ -102,7 +104,7 @@ class ExactDedup:
 
         for doc in documents:
             # Normalize whitespace (collapse multiple spaces, trim)
-            normalized_doc = ' '.join(doc.split())
+            normalized_doc = " ".join(doc.split())
             doc_hash = self.sha1_hash(normalized_doc)
 
             if doc_hash not in seen:

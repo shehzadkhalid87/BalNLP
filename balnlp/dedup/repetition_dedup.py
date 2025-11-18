@@ -49,9 +49,7 @@ class WordRepetitionDedup:
 class RepetitionDedup:
     """Combined repetitive text cleaner for Balochi."""
 
-    def __init__(self,
-                 char_repeat_threshold=0.7,
-                 word_repeat_threshold=0.6):
+    def __init__(self, char_repeat_threshold=0.7, word_repeat_threshold=0.6):
         self.char_dedup = CharLevelDedup(char_repeat_threshold)
         self.word_dedup = WordRepetitionDedup(word_repeat_threshold)
 

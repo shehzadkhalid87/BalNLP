@@ -2,10 +2,10 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Dict, Optional, Union, List
+from typing import Dict, List, Optional, Union
 
-from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
@@ -17,7 +17,9 @@ def read_text_file(file_path: str) -> str:
     return file_path.read_text(encoding="utf-8")
 
 
-def write_output(output: Dict[str, Union[str, int, list]], output_file: Optional[str] = None) -> None:
+def write_output(
+    output: Dict[str, Union[str, int, list]], output_file: Optional[str] = None
+) -> None:
     output_json = json.dumps(output, ensure_ascii=False, indent=2)
     if output_file:
         Path(output_file).parent.mkdir(parents=True, exist_ok=True)
@@ -51,7 +53,9 @@ def preprocess_text(
     )
 
     normalizer = BalochiTextNormalizer()
-    normalized_text = normalizer.normalize_text(cleaned_text, remove_diacritics=remove_diacritics)
+    normalized_text = normalizer.normalize_text(
+        cleaned_text, remove_diacritics=remove_diacritics
+    )
 
     word_tokenizer = BalochiWordTokenizer()
     words = word_tokenizer.tokenize(normalized_text)
@@ -73,17 +77,29 @@ def preprocess_text(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="BalNLP: Full Balochi NLP preprocessing pipeline")
+    parser = argparse.ArgumentParser(
+        description="BalNLP: Full Balochi NLP preprocessing pipeline"
+    )
     parser.add_argument("input_file", help="Input text file path")
     parser.add_argument("--output", "-o", help="Output JSON file path")
     parser.add_argument("--remove-urls", action="store_true", help="Remove URLs")
     parser.add_argument("--remove-emails", action="store_true", help="Remove emails")
     parser.add_argument("--remove-numbers", action="store_true", help="Remove numbers")
     parser.add_argument("--remove-emojis", action="store_true", help="Remove emojis")
-    parser.add_argument("--remove-special", action="store_true", help="Remove special characters")
-    parser.add_argument("--keep-chars", help="Comma-separated special characters to keep, e.g. 'ء,۔'")
-    parser.add_argument("--remove-diacritics", action="store_true", help="Remove diacritics during normalization")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Print processing steps")
+    parser.add_argument(
+        "--remove-special", action="store_true", help="Remove special characters"
+    )
+    parser.add_argument(
+        "--keep-chars", help="Comma-separated special characters to keep, e.g. 'ء,۔'"
+    )
+    parser.add_argument(
+        "--remove-diacritics",
+        action="store_true",
+        help="Remove diacritics during normalization",
+    )
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Print processing steps"
+    )
     args = parser.parse_args()
 
     try:

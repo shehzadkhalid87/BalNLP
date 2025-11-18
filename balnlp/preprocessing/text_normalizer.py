@@ -1,25 +1,45 @@
 import re
 from typing import List
 
+
 class BalochiTextNormalizer:
     """Normalize Balochi text (chars, diacritics, spaces, punctuation)."""
 
     def __init__(self):
         self.char_maps = {
-            "ي": "ی", "ئ": "ی",
-            "ك": "ک", "ق": "ک",
+            "ي": "ی",
+            "ئ": "ی",
+            "ك": "ک",
+            "ق": "ک",
             "ة": "ہ",
-            "س": "س", "ث": "س", "ص": "س",
-            "ز": "ز", "ذ": "ز", "ض": "ز", "ظ": "ز",
-            "ا": "ا", "ع": "ا",
-            "پ": "پ", "ف": "پ",
-            "ھ": "ھ", "ح": "ھ", "خ": "ھ",
-            "ت": "ت", "ط": "ت",
-            "گ": "گ", "غ": "گ"
+            "س": "س",
+            "ث": "س",
+            "ص": "س",
+            "ز": "ز",
+            "ذ": "ز",
+            "ض": "ز",
+            "ظ": "ز",
+            "ا": "ا",
+            "ع": "ا",
+            "پ": "پ",
+            "ف": "پ",
+            "ھ": "ھ",
+            "ح": "ھ",
+            "خ": "ھ",
+            "ت": "ت",
+            "ط": "ت",
+            "گ": "گ",
+            "غ": "گ",
         }
         self.diacritics = [
-            "\u064b", "\u064c", "\u064d", "\u064e",
-            "\u064f", "\u0650", "\u0651", "\u0652"
+            "\u064b",
+            "\u064c",
+            "\u064d",
+            "\u064e",
+            "\u064f",
+            "\u0650",
+            "\u0651",
+            "\u0652",
         ]
         # Common Arabic/Balochi punctuation
         self.punctuations = "؟،؛.!؟…“”\"'()[]{}:"
@@ -50,5 +70,7 @@ class BalochiTextNormalizer:
         text = self.normalize_spaces(text)
         return text
 
-    def normalize_corpus(self, corpus: List[str], remove_diacritics: bool = False) -> List[str]:
+    def normalize_corpus(
+        self, corpus: List[str], remove_diacritics: bool = False
+    ) -> List[str]:
         return [self.normalize_text(text, remove_diacritics) for text in corpus]

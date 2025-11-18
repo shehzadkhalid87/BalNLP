@@ -1,7 +1,7 @@
 class NearDedup:
     """Remove near duplicates using Jaccard similarity over shingles."""
 
-    def __init__(self, shingle_size=3, threshold=0.8, mode='word'):
+    def __init__(self, shingle_size=3, threshold=0.8, mode="word"):
         """
         Args:
             shingle_size: Size of shingles (n-grams)
@@ -14,7 +14,7 @@ class NearDedup:
 
     def shingles(self, text: str):
         """Generate shingles based on selected mode."""
-        if self.mode == 'word':
+        if self.mode == "word":
             return self._word_shingles(text)
         else:  # character level
             return self._char_shingles(text)
@@ -25,7 +25,7 @@ class NearDedup:
         if len(words) < self.shingle_size:
             return set()
         return set(
-            tuple(words[i:i + self.shingle_size])
+            tuple(words[i : i + self.shingle_size])
             for i in range(len(words) - self.shingle_size + 1)
         )
 
@@ -35,7 +35,7 @@ class NearDedup:
         if len(text) < self.shingle_size:
             return set()
         return set(
-            text[i:i + self.shingle_size]
+            text[i : i + self.shingle_size]
             for i in range(len(text) - self.shingle_size + 1)
         )
 

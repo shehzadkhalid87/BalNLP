@@ -50,7 +50,7 @@ output = {
     "no_stopwords": text_no_stopwords,
     "normalized": text_norm,
     "words": words,
-    "sentences": sentences
+    "sentences": sentences,
 }
 
 with open(output_file, "w", encoding="utf-8") as f:

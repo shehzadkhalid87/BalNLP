@@ -23,7 +23,7 @@ class BalochiSentenceTokenizer:
             "سر",
             "واجہ",
             "بی بی",
-            "بانک"
+            "بانک",
         ]
 
         # Regex to protect abbreviation dots
@@ -78,10 +78,7 @@ class BalochiSentenceTokenizer:
         raw = text
         masked = self._mask_abbreviations(raw)
         # Non-greedy pattern to match body + ending
-        pattern = re.compile(
-            rf"(.*?)(?:({self.sentence_endings}+)|$)",
-            re.S
-        )
+        pattern = re.compile(rf"(.*?)(?:({self.sentence_endings}+)|$)", re.S)
 
         results = []
         search_pos = 0
@@ -106,12 +103,9 @@ class BalochiSentenceTokenizer:
 
             end_idx = idx + len(unmasked)
 
-            results.append({
-                "text": unmasked,
-                "start": idx,
-                "end": end_idx,
-                "ending": ending
-            })
+            results.append(
+                {"text": unmasked, "start": idx, "end": end_idx, "ending": ending}
+            )
 
             search_pos = end_idx
 

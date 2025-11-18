@@ -1,5 +1,4 @@
 import os
-import json
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
@@ -17,7 +16,9 @@ from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 def preprocess_corpus(input_file: str, temp_file: str):
     tokenizer = BalochiWordTokenizer()
 
-    with open(input_file, "r", encoding="utf-8") as f, open(temp_file, "w", encoding="utf-8") as out:
+    with open(input_file, "r", encoding="utf-8") as f, open(
+        temp_file, "w", encoding="utf-8"
+    ) as out:
         for line in f:
             line = line.strip()
             if not line:
@@ -57,8 +58,12 @@ def train_bpe_tokenizer(preprocessed_file: str, save_dir: str, vocab_size: int =
 # ---------------------------------------------------------
 if __name__ == "__main__":
     input_file = "/home/python-dev/BalNLP/data/data.txt"  # original text corpus
-    temp_file = "/home/python-dev/BalNLP/data/balochi_corpus_pre.txt"  # pre-tokenized for BPE
+    temp_file = (
+        "/home/python-dev/BalNLP/data/balochi_corpus_pre.txt"  # pre-tokenized for BPE
+    )
     save_dir = "tokenizer"
 
     preprocess_corpus(input_file, temp_file)
-    train_bpe_tokenizer(temp_file, save_dir, vocab_size=500)  # you can adjust vocab_size
+    train_bpe_tokenizer(
+        temp_file, save_dir, vocab_size=500
+    )  # you can adjust vocab_size

@@ -6,9 +6,11 @@ from pathlib import Path
 import pytest
 from balnlp.preprocessing.stopwords import BalochiStopwordRemover
 
+
 @pytest.fixture
 def default_remover():
     return BalochiStopwordRemover()
+
 
 def test_default_stopwords(default_remover):
     remover = default_remover
@@ -17,6 +19,7 @@ def test_default_stopwords(default_remover):
     if "من" in remover.stopwords:
         assert "من" not in filtered
     assert "کتاب" in filtered
+
 
 def test_custom_stopwords():
     custom_stopwords = {"کتاب"}
@@ -28,6 +31,7 @@ def test_custom_stopwords():
     assert "من" in filtered
     assert "وانان" in filtered
 
+
 def test_stopwords_from_list(default_remover):
     remover = default_remover
     tokens = ["من", "کتاب", "وانان"]
@@ -35,6 +39,7 @@ def test_stopwords_from_list(default_remover):
     if "من" in remover.stopwords:
         assert "من" not in filtered
     assert "کتاب" in filtered
+
 
 def test_add_stopwords(default_remover):
     remover = default_remover
@@ -44,6 +49,7 @@ def test_add_stopwords(default_remover):
     assert "کتاب" not in filtered
     assert "وانان" not in filtered
 
+
 def test_remove_custom_stopwords(default_remover):
     remover = default_remover
     text = "من کتاب وانان"
@@ -52,6 +58,7 @@ def test_remove_custom_stopwords(default_remover):
     remover.remove_custom_stopwords({"من"})
     filtered2 = remover.remove_stopwords(text)
     assert "من" in filtered2
+
 
 def test_load_stopwords_from_file():
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as f:
@@ -67,6 +74,7 @@ def test_load_stopwords_from_file():
     finally:
         os.unlink(temp_path)
 
+
 def test_save_stopwords(default_remover):
     remover = default_remover
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -78,10 +86,12 @@ def test_save_stopwords(default_remover):
             for word in remover.stopwords:
                 assert word in content
 
+
 def test_empty_text(default_remover):
     remover = default_remover
     assert remover.remove_stopwords("") == ""
     assert remover.remove_stopwords_from_list([]) == []
+
 
 def test_no_stopwords_in_text(default_remover):
     remover = default_remover

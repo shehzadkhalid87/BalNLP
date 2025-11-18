@@ -4,7 +4,6 @@ from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
 from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 
 
-
 @pytest.fixture
 def word_tokenizer():
     return BalochiWordTokenizer()
@@ -18,6 +17,7 @@ def sentence_tokenizer():
 # -------------------------------------------------------
 # WORD TOKENIZER TESTS
 # -------------------------------------------------------
+
 
 def test_basic_word_tokenization(word_tokenizer):
     text = "منی نام احمد اِنت"
@@ -74,6 +74,7 @@ def test_tokenize_with_affixes(word_tokenizer):
 # -------------------------------------------------------
 # SENTENCE TOKENIZER TESTS
 # -------------------------------------------------------
+
 
 def test_basic_sentence_tokenization(sentence_tokenizer):
     text = "منی نام احمد اِنت۔ من بلوچستان ءَ زندگ کنان۔"

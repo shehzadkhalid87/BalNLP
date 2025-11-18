@@ -14,7 +14,9 @@ def build_corpus(input_dir: str, output_file: str, remove_stopwords=True):
     stopwords = BalochiStopwordRemover() if remove_stopwords else None
 
     corpus = []
-    files = [os.path.join(input_dir, f) for f in os.listdir(input_dir) if f.endswith(".txt")]
+    files = [
+        os.path.join(input_dir, f) for f in os.listdir(input_dir) if f.endswith(".txt")
+    ]
 
     for file in tqdm(files, desc="Processing files"):
         with open(file, "r", encoding="utf-8") as f:
@@ -24,7 +26,9 @@ def build_corpus(input_dir: str, output_file: str, remove_stopwords=True):
         tokens = normalized.split()  # list of tokens
         if remove_stopwords:
             tokens = stopwords.remove_stopwords_from_list(tokens)
-        corpus.append({"file": os.path.basename(file), "tokens": tokens, "text": " ".join(tokens)})
+        corpus.append(
+            {"file": os.path.basename(file), "tokens": tokens, "text": " ".join(tokens)}
+        )
 
     with open(output_file, "w", encoding="utf-8") as f:
         for entry in corpus:
@@ -32,12 +36,16 @@ def build_corpus(input_dir: str, output_file: str, remove_stopwords=True):
 
     print(f"Corpus saved to {output_file}")
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("input_dir")
     parser.add_argument("output_file")
     parser.add_argument("--no-stopwords", action="store_true")
     args = parser.parse_args()
 
-    build_corpus(args.input_dir, args.output_file, remove_stopwords=not args.no_stopwords)
+    build_corpus(
+        args.input_dir, args.output_file, remove_stopwords=not args.no_stopwords
+    )

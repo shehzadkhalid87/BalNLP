@@ -19,7 +19,7 @@ def process_large_file(
     Args:
         file_path (str): Path to the text file.
         chunk_size (int): Size of chunks to read (in bytes).
-        processor (Callable[[str], str], optional): Optional function to process each chunk.
+        processor (Callable[[str], str], optional): Function to process chunks.
         encoding (str): File encoding (default: 'utf-8').
         show_progress (bool): Whether to show a progress bar.
 
@@ -32,7 +32,12 @@ def process_large_file(
     file_size = os.path.getsize(file_path)
 
     with open(file_path, "r", encoding=encoding) as file:
-        with tqdm(total=file_size, disable=not show_progress, unit="B", unit_scale=True) as pbar:
+        with tqdm(
+            total=file_size,
+            disable=not show_progress,
+            unit="B",
+            unit_scale=True
+        ) as pbar:
             while True:
                 chunk = file.read(chunk_size)
                 if not chunk:
@@ -54,7 +59,7 @@ def save_processed_text(
     show_progress: bool = True,
 ) -> None:
     """
-    Process a large text file and save the processed results to another file.
+    Process a large text file and save results to another file.
 
     Args:
         input_path (str): Path to the input file.
@@ -76,3 +81,46 @@ def save_processed_text(
             show_progress=show_progress,
         ):
             out_file.write(chunk)
+
+
+def read_balochi_file(file_path: str, encoding: str = 'utf-8') -> list:
+    """
+    Read a Balochi text file and return lines.
+
+    Args:
+        file_path: Path to the text file
+        encoding: File encoding (default: 'utf-8')
+
+    Returns:
+        List of text lines
+    """
+    try:
+        with open(file_path, 'r', encoding=encoding) as f:
+            lines = [line.strip() for line in f if line.strip()]
+        return lines
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File not found: {file_path}")
+    except UnicodeDecodeError:
+        raise UnicodeDecodeError(
+            f"Unable to decode {file_path} with {encoding} encoding"
+        )
+
+
+def write_balochi_file(
+    file_path: str,
+    data: list,
+    encoding: str = 'utf-8'
+) -> None:
+    """
+    Write data to a Balochi text file.
+
+    Args:
+        file_path: Path to output file
+        data: List of text lines to write
+        encoding: File encoding (default: 'utf-8')
+    """
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    with open(file_path, 'w', encoding=encoding) as f:
+        for line in data:
+            f.write(line + '\n')

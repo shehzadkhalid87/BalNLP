@@ -1,10 +1,10 @@
 from .exact_dedup import ExactDedup
 from .near_dedup import NearDedup
-from .repetition_dedup import RepetitionDedup, CharLevelDedup, WordRepetitionDedup
+from .repetition_dedup import CharLevelDedup, RepetitionDedup, WordRepetitionDedup
 
 __all__ = [
     "ExactDedup",
-    "NearDedup", 
+    "NearDedup",
     "RepetitionDedup",
     "CharLevelDedup",
     "WordRepetitionDedup",
