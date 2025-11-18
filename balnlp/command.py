@@ -4,9 +4,9 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional, Union, List
 
-from balnlp.bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
-from balnlp.preprocessing.text_clearner import BalochiTextCleaner
+from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 

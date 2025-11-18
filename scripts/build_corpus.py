@@ -4,7 +4,7 @@ import json
 from tqdm import tqdm
 
 from balnlp.preprocessing.stopwords import BalochiStopwordRemover
-from balnlp.preprocessing.text_clearner import BalochiTextCleaner
+from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 

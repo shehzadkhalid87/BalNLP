@@ -11,8 +11,8 @@ include .flake8
 recursive-include tests *
 recursive-include docs *.md *.rst *.py *.yml
 recursive-include examples *.py *.ipynb
-recursive-include src/data *
-recursive-include src/resources *
+recursive-include balnlp/data *
+recursive-include balnlp/resources *
 
 prune docs/build/
 prune docs/_build/

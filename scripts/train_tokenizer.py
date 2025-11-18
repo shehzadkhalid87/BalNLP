@@ -5,44 +5,60 @@ from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
 from tokenizers.pre_tokenizers import Whitespace
 
-def train_tokenizer(corpus_file: str, save_dir: str, vocab_size: int = 30000):
-    # Ensure save_dir exists
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
+
+
+# your rule-based tokenizer
+
+
+# ---------------------------------------------------------
+# Step 1: Tokenize your corpus with your own tokenizer
+# ---------------------------------------------------------
+def preprocess_corpus(input_file: str, temp_file: str):
+    tokenizer = BalochiWordTokenizer()
+
+    with open(input_file, "r", encoding="utf-8") as f, open(temp_file, "w", encoding="utf-8") as out:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            tokens_info = tokenizer.tokenize_with_affixes(line)
+            # Join tokens with spaces for BPE training
+            tokens = [t["token"] for t in tokens_info]
+            out.write(" ".join(tokens) + "\n")
+    print(f"Preprocessed corpus saved to {temp_file}")
+
+
+# ---------------------------------------------------------
+# Step 2: Train a BPE tokenizer on pre-tokenized corpus
+# ---------------------------------------------------------
+def train_bpe_tokenizer(preprocessed_file: str, save_dir: str, vocab_size: int = 300):
     os.makedirs(save_dir, exist_ok=True)
 
-    # Initialize a BPE tokenizer
     tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
     tokenizer.pre_tokenizer = Whitespace()
 
-    # Trainer
     trainer = BpeTrainer(
         vocab_size=vocab_size,
         min_frequency=2,
         special_tokens=["[PAD]", "[UNK]", "[CLS]", "[SEP]", "[MASK]"],
     )
 
-    # Train tokenizer
-    tokenizer.train([corpus_file], trainer=trainer)
+    tokenizer.train([preprocessed_file], trainer=trainer)
 
-    # Save the tokenizer as JSON
+    # Save tokenizer
     tokenizer_path = os.path.join(save_dir, "tokenizer.json")
     tokenizer.save(tokenizer_path)
-    print(f"Tokenizer saved to {tokenizer_path}")
+    print(f"BPE Tokenizer saved to {tokenizer_path}")
 
-    # Optionally, save vocab.txt separately (for compatibility)
-    vocab_file = os.path.join(save_dir, "vocab.txt")
-    with open(vocab_file, "w", encoding="utf-8") as f:
-        for token, _ in tokenizer.get_vocab().items():
-            f.write(token + "\n")
-    print(f"Vocabulary saved to {vocab_file}")
 
+# ---------------------------------------------------------
 # Example usage
+# ---------------------------------------------------------
 if __name__ == "__main__":
-    import argparse
+    input_file = "/home/python-dev/BalNLP/data/data.txt"  # original text corpus
+    temp_file = "/home/python-dev/BalNLP/data/balochi_corpus_pre.txt"  # pre-tokenized for BPE
+    save_dir = "tokenizer"
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("corpus_file")
-    parser.add_argument("save_dir")
-    parser.add_argument("--vocab_size", type=int, default=30000)
-    args = parser.parse_args()
-
-    train_tokenizer(args.corpus_file, args.save_dir, args.vocab_size)
+    preprocess_corpus(input_file, temp_file)
+    train_bpe_tokenizer(temp_file, save_dir, vocab_size=500)  # you can adjust vocab_size

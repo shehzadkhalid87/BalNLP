@@ -13,8 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/shehzadkhalid87/BalNLP",
-    package_dir={"": "src"},
-    packages=find_packages(where="src"),
+    packages=find_packages(),
     python_requires=">=3.8",
     install_requires=[
         "numpy>=1.21.0",
@@ -55,5 +54,8 @@ setup(
         "Topic :: Text Processing :: Linguistic",
     ],
     include_package_data=True,
+    package_data={
+        "balnlp": ["resources/bal_stopwords/*.txt"],
+    },
     zip_safe=False,
 )

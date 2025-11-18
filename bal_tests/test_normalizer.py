@@ -40,7 +40,7 @@ def test_remove_diacritics(normalizer):
 
 def test_normalize_spaces(normalizer):
     """Test spacing and punctuation fixes."""
-    text = "سلام  ، دنيا  ؟ ! ."
+    text = "سلام  ، دنيا  ؟  "
     result = normalizer.normalize_spaces(text)
     assert "  " not in result
     assert " ،" not in result

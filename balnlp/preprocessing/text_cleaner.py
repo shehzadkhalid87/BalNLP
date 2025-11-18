@@ -78,8 +78,8 @@ class BalochiTextCleaner:
         if remove_emails: text = self.remove_emails(text)
         if remove_emojis: text = self.remove_emojis(text)
         if preserve_special_chars:
-            allowed = "".join(keep_chars) if keep_chars else "ءُءَءِ،؛.!؟-"
-            text = re.sub(f"[^\w\s{re.escape(allowed)}]", " ", text)
+            allowed = "".join(keep_chars) if keep_chars else "ءُءَءِ"
+            text = re.sub(rf"[^\w\s{re.escape(allowed)}]", " ", text)
         else:
             text = re.sub(r"[^\w\s]", " ", text)
         text = self.remove_non_balochi(text)

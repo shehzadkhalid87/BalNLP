@@ -1,7 +1,7 @@
 import pytest
 
 from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
-from balnlp.bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 
 
 

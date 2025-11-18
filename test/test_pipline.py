@@ -1,13 +1,13 @@
 import os
 import json
 
-from balnlp.bal_tokenizer.Word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
 from balnlp.preprocessing.stopwords import BalochiStopwordRemover
-from balnlp.preprocessing.text_clearner import BalochiTextCleaner
+from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
-input_file = "/data/data.txt"
+input_file = "/home/python-dev/BalNLP/data/data.txt"
 output_file = "data/balochi_sample_output.json"
 
 # Ensure output directory exists
@@ -18,7 +18,7 @@ with open(input_file, "r", encoding="utf-8") as f:
     text = f.read()
 
 print("\n=== RAW TEXT ===")
-print(text[:200], "...")  # show first 200 chars
+print(text[:100], "...")  # show first 200 chars
 
 # Step 1: Clean text (remove unwanted chars, normalize spacing)
 cleaner = BalochiTextCleaner()
