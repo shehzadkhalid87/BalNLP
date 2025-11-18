@@ -1,6 +1,7 @@
 """Tests for BalochiTextNormalizer."""
 
 import pytest
+
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 

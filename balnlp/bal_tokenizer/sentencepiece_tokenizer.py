@@ -4,8 +4,11 @@ from typing import List, Optional
 
 try:
     import sentencepiece as spm
+
+    SPM_AVAILABLE = True
 except ImportError:
     spm = None
+    SPM_AVAILABLE = False
 
 
 class BalSentencePieceTokenizer:
@@ -21,7 +24,7 @@ class BalSentencePieceTokenizer:
         self, texts: List[str], vocab_size: int = 10000, save_dir: Optional[str] = None
     ):
         """Train SentencePiece model."""
-        if spm is None:
+        if not SPM_AVAILABLE:
             raise ImportError(
                 "sentencepiece is required. Install with: pip install sentencepiece"
             )
@@ -34,7 +37,7 @@ class BalSentencePieceTokenizer:
 
         try:
             # Train model
-            spm.SentencePieceTrainer.train(
+            spm.SentencePieceTrainer.Train(  # type: ignore
                 input=temp_file,
                 model_prefix=self.model_prefix,
                 vocab_size=vocab_size,
@@ -50,9 +53,10 @@ class BalSentencePieceTokenizer:
                 eos_piece="</s>",
             )
 
-            # Load model
-            self.sp_model = spm.SentencePieceProcessor()
-            self.sp_model.load(f"{self.model_prefix}.model")
+            # Load model - Initialize and load in separate steps
+            sp_model_instance = spm.SentencePieceProcessor()  # type: ignore
+            sp_model_instance.load(f"{self.model_prefix}.model")
+            self.sp_model = sp_model_instance
 
             # Save to directory if specified
             if save_dir:
@@ -75,6 +79,9 @@ class BalSentencePieceTokenizer:
 
     def save(self, save_dir: str):
         """Save tokenizer files."""
+        if self.sp_model is None:
+            raise ValueError("Tokenizer not trained. Call train() first.")
+
         os.makedirs(save_dir, exist_ok=True)
 
         # Copy model files to save directory
@@ -86,13 +93,28 @@ class BalSentencePieceTokenizer:
             if os.path.exists(src):
                 shutil.copy2(src, dst)
 
+    def load_model(self, model_file: str):
+        """Load a trained SentencePiece model."""
+        if not SPM_AVAILABLE:
+            raise ImportError(
+                "sentencepiece is required. Install with: pip install sentencepiece"
+            )
+
+        # Initialize and load in separate steps
+        sp_model_instance = spm.SentencePieceProcessor()  # type: ignore
+        sp_model_instance.load(model_file)
+        self.sp_model = sp_model_instance
+
     def load(self, save_dir: str):
         """Load tokenizer from files."""
-        if spm is None:
+        if not SPM_AVAILABLE:
             raise ImportError(
                 "sentencepiece is required. Install with: pip install sentencepiece"
             )
 
         model_path = os.path.join(save_dir, "sp_model.model")
-        self.sp_model = spm.SentencePieceProcessor()
-        self.sp_model.load(model_path)
+
+        # Initialize and load in separate steps
+        sp_model_instance = spm.SentencePieceProcessor()  # type: ignore
+        sp_model_instance.load(model_path)
+        self.sp_model = sp_model_instance

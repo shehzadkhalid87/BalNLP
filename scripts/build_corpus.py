@@ -1,6 +1,7 @@
 # scripts/build_corpus.py
-import os
 import json
+import os
+
 from tqdm import tqdm
 
 from balnlp.preprocessing.stopwords import BalochiStopwordRemover
@@ -8,10 +9,9 @@ from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 
-def build_corpus(input_dir: str, output_file: str, remove_stopwords=True):
+def build_corpus(input_dir: str, output_file: str, remove_stopwords: bool = True):
     cleaner = BalochiTextCleaner()
     normalizer = BalochiTextNormalizer()
-    stopwords = BalochiStopwordRemover() if remove_stopwords else None
 
     corpus = []
     files = [
@@ -24,8 +24,12 @@ def build_corpus(input_dir: str, output_file: str, remove_stopwords=True):
         cleaned = cleaner.clean_text(text)
         normalized = normalizer.normalize_text(cleaned, remove_diacritics=True)
         tokens = normalized.split()  # list of tokens
+
+        # FIX: Only use stopword remover if explicitly requested
         if remove_stopwords:
-            tokens = stopwords.remove_stopwords_from_list(tokens)
+            stopword_remover = BalochiStopwordRemover()
+            tokens = stopword_remover.remove_stopwords_from_list(tokens)
+
         corpus.append(
             {"file": os.path.basename(file), "tokens": tokens, "text": " ".join(tokens)}
         )

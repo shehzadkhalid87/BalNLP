@@ -1,11 +1,11 @@
 import os
+
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
-from tokenizers.trainers import BpeTrainer
 from tokenizers.pre_tokenizers import Whitespace
+from tokenizers.trainers import BpeTrainer
 
 from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
-
 
 # your rule-based tokenizer
 

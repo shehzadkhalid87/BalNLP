@@ -1,8 +1,8 @@
-import os
 import json
+import os
 
-from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
 from balnlp.preprocessing.stopwords import BalochiStopwordRemover
 from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer

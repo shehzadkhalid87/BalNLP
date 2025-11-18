@@ -1,6 +1,6 @@
 # src/bal_tokenizer/sentence_tokenizer.py
 import re
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 class BalochiSentenceTokenizer:
@@ -9,8 +9,7 @@ class BalochiSentenceTokenizer:
     Ensures every line is executed in normal operation so coverage reaches 100%.
     """
 
-    def __init__(self, abbreviations: List[str] = None):
-
+    def __init__(self, abbreviations: Optional[List[str]] = None):
         # Sentence-ending characters
         self.sentence_endings = r"[\.!\?؟\u06D4]"
 
@@ -74,7 +73,6 @@ class BalochiSentenceTokenizer:
     # Tokenize with boundaries (100% line coverage guaranteed)
     # ------------------------------------------------------
     def tokenize_with_boundaries(self, text: str) -> List[Dict]:
-
         raw = text
         masked = self._mask_abbreviations(raw)
         # Non-greedy pattern to match body + ending
@@ -84,7 +82,6 @@ class BalochiSentenceTokenizer:
         search_pos = 0
 
         for match in pattern.finditer(masked):
-
             body = match.group(1).strip()
             ending = match.group(2) or ""
 

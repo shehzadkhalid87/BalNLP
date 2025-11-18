@@ -53,7 +53,8 @@ pip install -r requirements-dev.txt
 ### Basic Usage
 ```python
 from balnlp import BalochiTextNormalizer, BalochiTextCleaner
-from balnlp import WordTokenizer, SentenceTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
 
 # Sample Balochi text
 text = "شمارا تھنا بلوچی وت وانگ ءُ دربرگی نہ اِنت بلکیں شمارا راج ءِ نودربراں ھم وانینگی اِنت۔"
@@ -61,8 +62,8 @@ text = "شمارا تھنا بلوچی وت وانگ ءُ دربرگی نہ اِ
 # Initialize processors
 normalizer = BalochiTextNormalizer()
 cleaner = BalochiTextCleaner()
-word_tokenizer = WordTokenizer()
-sentence_tokenizer = SentenceTokenizer()
+word_tokenizer = BalochiWordTokenizer()
+sentence_tokenizer = BalochiSentenceTokenizer()
 
 # Process text
 normalized_text = normalizer.normalize(text, remove_diacritics=True)
@@ -96,30 +97,31 @@ print(f"Cleaned: {cleaned}")
 
 ### Step 2: Tokenization
 ```python
-from balnlp import WordTokenizer, SentenceTokenizer
+from balnlp.bal_tokenizer.word_tokenizer import BalochiWordTokenizer
+from balnlp.bal_tokenizer.sentence_tokenizer import BalochiSentenceTokenizer
 
-text = "من بلوچے آں. تہ چہ طور آں?"
+text = "من بلوچے آں. "
 
 # Word tokenization
-word_tokenizer = WordTokenizer()
+word_tokenizer = BalochiWordTokenizer()
 words = word_tokenizer.tokenize(text)
 print(f"Words: {words}")
 
 # Sentence tokenization
-sentence_tokenizer = SentenceTokenizer()
+sentence_tokenizer = BalochiSentenceTokenizer()
 sentences = sentence_tokenizer.tokenize(text)
 print(f"Sentences: {sentences}")
 ```
 
 ### Step 3: Deduplication
 ```python
-from balnlp import ExactDedup, NearDedup
+from balnlp.dedup.exact_dedup import ExactDedup
+from balnlp.dedup.near_dedup import NearDedup
 
 documents = [
     "من بلوچے آں",
-    "من بلوچے آں",  # Duplicate
-    "تہ بلوچستان ءَ یت",
-    "بلوچی زبان زندگ بات"
+    "بلوچی زبان زندگ بات",
+   "من بلوچے آں"
 ]
 
 # Remove exact duplicates
@@ -128,7 +130,7 @@ unique_docs = exact_dedup.remove_exact_duplicates(documents)
 print(f"Exact dedup: {len(unique_docs)} documents")
 
 # Remove near duplicates
-near_dedup = NearDedup(threshold=0.7)
+near_dedup = NearDedup(threshold=0.4)
 near_unique = near_dedup.remove_near_duplicates(documents)
 print(f"Near dedup: {len(near_unique)} documents")
 ```
@@ -140,7 +142,6 @@ from balnlp import BalBPETokenizer
 # Sample Balochi corpus
 texts = [
     "من بلوچے آں",
-    "تہ بلوچستان ءَ یت", 
     "بلوچی زبان زندگ بات"
 ]
 
@@ -158,15 +159,15 @@ print(f"Decoded: {decoded}")
 
 ### Step 5: Processing Files
 ```python
-from balnlp.utils import read_balochi_file, write_balochi_file
-from balnlp import BalochiTextNormalizer, WordTokenizer
+from balnlp.utils.
+from balnlp import BalochiTextNormalizer, BalBPETokenizer
 
 # Read Balochi text file
 lines = read_balochi_file("data/balochi_corpus.txt")
 
 # Process each line
 normalizer = BalochiTextNormalizer()
-tokenizer = WordTokenizer()
+tokenizer = BalBPETokenizer()
 
 processed_data = []
 for line in lines:
@@ -185,24 +186,25 @@ write_balochi_file("processed_corpus.json", processed_data)
 ## 🔧 Advanced Usage
 
 ### Custom Pipeline
+
 ```python
 from balnlp import (
-    BalochiTextNormalizer, 
+    BalochiTextNormalizer,
     BalochiTextCleaner,
-    WordTokenizer,
-    SentenceTokenizer,
-    ExactDedup,
-    NearDedup
+    NearDedup,
+    BalochiWordTokenizer,
+    BalochiSentenceTokenizer
 )
+
 
 class BalochiTextPipeline:
     def __init__(self):
         self.normalizer = BalochiTextNormalizer()
         self.cleaner = BalochiTextCleaner()
-        self.word_tokenizer = WordTokenizer()
-        self.sentence_tokenizer = SentenceTokenizer()
-        self.dedup = NearDedup(threshold=0.8)
-    
+        self.word_tokenizer = BalochiWordTokenizer()
+        self.sentence_tokenizer = BalochiSentenceTokenizer()
+        self.dedup = NearDedup(threshold=0.4)
+
     def process_corpus(self, texts):
         # Normalize and clean
         processed = [
@@ -211,10 +213,10 @@ class BalochiTextPipeline:
             )
             for text in texts
         ]
-        
+
         # Remove duplicates
         unique_texts = self.dedup.remove_near_duplicates(processed)
-        
+
         # Tokenize
         results = []
         for text in unique_texts:
@@ -223,8 +225,9 @@ class BalochiTextPipeline:
                 'words': self.word_tokenizer.tokenize(text),
                 'sentences': self.sentence_tokenizer.tokenize(text)
             })
-        
+
         return results
+
 
 # Usage
 pipeline = BalochiTextPipeline()

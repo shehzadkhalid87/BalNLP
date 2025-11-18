@@ -33,10 +33,7 @@ def process_large_file(
 
     with open(file_path, "r", encoding=encoding) as file:
         with tqdm(
-            total=file_size,
-            disable=not show_progress,
-            unit="B",
-            unit_scale=True
+            total=file_size, disable=not show_progress, unit="B", unit_scale=True
         ) as pbar:
             while True:
                 chunk = file.read(chunk_size)
@@ -83,7 +80,7 @@ def save_processed_text(
             out_file.write(chunk)
 
 
-def read_balochi_file(file_path: str, encoding: str = 'utf-8') -> list:
+def read_balochi_file(file_path: str, encoding: str = "utf-8") -> list:
     """
     Read a Balochi text file and return lines.
 
@@ -95,22 +92,20 @@ def read_balochi_file(file_path: str, encoding: str = 'utf-8') -> list:
         List of text lines
     """
     try:
-        with open(file_path, 'r', encoding=encoding) as f:
+        with open(file_path, "r", encoding=encoding) as f:
             lines = [line.strip() for line in f if line.strip()]
         return lines
     except FileNotFoundError:
         raise FileNotFoundError(f"File not found: {file_path}")
     except UnicodeDecodeError:
         raise UnicodeDecodeError(
-            f"Unable to decode {file_path} with {encoding} encoding"
+            "utf-8", b"", 0, 1, f"Unable to decode {file_path} with {encoding} encoding"
         )
+    except Exception:
+        raise Exception(f"Unable to decode {file_path} with {encoding} encoding")
 
 
-def write_balochi_file(
-    file_path: str,
-    data: list,
-    encoding: str = 'utf-8'
-) -> None:
+def write_balochi_file(file_path: str, data: list, encoding: str = "utf-8") -> None:
     """
     Write data to a Balochi text file.
 
@@ -121,6 +116,6 @@ def write_balochi_file(
     """
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-    with open(file_path, 'w', encoding=encoding) as f:
+    with open(file_path, "w", encoding=encoding) as f:
         for line in data:
-            f.write(line + '\n')
+            f.write(line + "\n")

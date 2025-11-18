@@ -9,7 +9,8 @@ setup(
     version="1.0.1",
     author="Shehzad Khalid",
     author_email="shehzadkhalido4@gmail.com",
-    description="A comprehensive Natural Language Processing toolkit for the Balochi language",
+    description="A comprehensive Natural \
+     Language Processing toolkit for the Balochi language",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/shehzadkhalid87/BalNLP",

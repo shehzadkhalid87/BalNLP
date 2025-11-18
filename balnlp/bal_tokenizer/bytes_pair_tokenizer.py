@@ -1,7 +1,7 @@
 import json
 import os
 from collections import Counter
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 class BalBPETokenizer:
@@ -14,9 +14,9 @@ class BalBPETokenizer:
     ):
         self.vocab_size = vocab_size
         self.special_tokens = special_tokens or ["<pad>", "<unk>", "<s>", "</s>"]
-        self.vocab = {}
-        self.merges = {}
-        self.inverse_vocab = {}
+        self.vocab: Dict[str, int] = {}
+        self.merges: Dict[Tuple[str, str], int] = {}
+        self.inverse_vocab: Dict[int, str] = {}
         self.trained = False
 
     def train(self, texts: List[str], save_dir: Optional[str] = None):
@@ -48,7 +48,7 @@ class BalBPETokenizer:
 
     def _extract_word_frequencies(self, texts: List[str]) -> Counter:
         """Extract words with their frequencies."""
-        word_freqs = Counter()
+        word_freqs: Counter = Counter()
         for text in texts:
             # Simple word splitting for Balochi
             words = text.split()
@@ -59,7 +59,7 @@ class BalBPETokenizer:
 
     def _initialize_vocab(self, word_freqs: Counter) -> Dict[str, int]:
         """Initialize vocabulary with individual characters."""
-        vocab = {}
+        vocab: Dict[str, int] = {}
         chars = set()
 
         # Collect all unique characters
@@ -76,22 +76,22 @@ class BalBPETokenizer:
 
         return vocab
 
-    def _learn_bpe(
-        self, word_freqs: Counter, num_merges: int = None
-    ) -> Dict[tuple, int]:
-        """Learn BPE merges."""
-        if num_merges is None:
-            num_merges = (
-                self.vocab_size - len(self.special_tokens) - 100
-            )  # Reserve space for chars
+    def _learn_bpe(self, word_freqs: Counter) -> Dict[Tuple[str, str], int]:
+        """Learn BPE merges from word frequencies."""
+        # Calculate number of merges needed
+        num_merges = self.vocab_size - len(self.special_tokens) - 100
 
-        vocab = {word: list(word) for word in word_freqs}
-        merges = {}
+        # Initialize vocabulary with words as character lists
+        vocab: Dict[str, List[str]] = {}
+        for word, freq in word_freqs.items():
+            vocab[word] = list(word)
+
+        merges: Dict[Tuple[str, str], int] = {}
         merge_count = 0
 
         for i in range(num_merges):
             # Count frequency of all pairs
-            pair_freqs = Counter()
+            pair_freqs: Counter = Counter()
             for word, tokens in vocab.items():
                 freq = word_freqs[word]
                 for j in range(len(tokens) - 1):
@@ -101,25 +101,28 @@ class BalBPETokenizer:
             if not pair_freqs:
                 break
 
-            # Find most frequent pair
-            best_pair = max(pair_freqs, key=pair_freqs.get)
+            # FIX: Use a lambda function instead of pair_freqs.get
+            best_pair = max(pair_freqs, key=lambda x: pair_freqs[x])
 
             # Add to merges
             merges[best_pair] = merge_count
             merge_count += 1
 
             # Merge this pair in all words
-            new_vocab = {}
+            new_vocab: Dict[str, List[str]] = {}
             for word, tokens in vocab.items():
                 new_tokens = []
-                i = 0
-                while i < len(tokens):
-                    if i < len(tokens) - 1 and (tokens[i], tokens[i + 1]) == best_pair:
-                        new_tokens.append(tokens[i] + tokens[i + 1])
-                        i += 2
+                idx = 0
+                while idx < len(tokens):
+                    if (
+                        idx < len(tokens) - 1
+                        and (tokens[idx], tokens[idx + 1]) == best_pair
+                    ):
+                        new_tokens.append(tokens[idx] + tokens[idx + 1])
+                        idx += 2
                     else:
-                        new_tokens.append(tokens[i])
-                        i += 1
+                        new_tokens.append(tokens[idx])
+                        idx += 1
                 new_vocab[word] = new_tokens
 
             vocab = new_vocab
@@ -281,10 +284,10 @@ class BalBPETokenizer:
 
         # Load vocabulary
         with open(os.path.join(save_dir, "vocab.json"), "r", encoding="utf-8") as f:
-            self.vocab = json.load(f)
+            vocab_data = json.load(f)
 
-        # Convert string keys to int for inverse vocab
-        self.vocab = {k: int(v) for k, v in self.vocab.items()}
+        # Convert string keys to int for values
+        self.vocab = {k: int(v) for k, v in vocab_data.items()}
         self.inverse_vocab = {v: k for k, v in self.vocab.items()}
 
         # Load merges

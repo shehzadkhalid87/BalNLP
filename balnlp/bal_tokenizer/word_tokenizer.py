@@ -78,7 +78,7 @@ class BalochiWordTokenizer:
             for prefix in self.prefixes:
                 if root.startswith(prefix):
                     prefixes_found.append(prefix)
-                    root = root[len(prefix) :]
+                    root = root[len(prefix)]
                     prefix_changed = True
 
         # ---- Extract MULTIPLE suffixes ----

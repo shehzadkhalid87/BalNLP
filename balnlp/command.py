@@ -10,11 +10,11 @@ from balnlp.preprocessing.text_cleaner import BalochiTextCleaner
 from balnlp.preprocessing.text_normalizer import BalochiTextNormalizer
 
 
-def read_text_file(file_path: str) -> str:
-    file_path = Path(file_path)
-    if not file_path.exists():
-        raise FileNotFoundError(f"Input file '{file_path}' does not exist.")
-    return file_path.read_text(encoding="utf-8")
+def read_file(file_path: str) -> str:
+    path = Path(file_path)
+    if not path.exists():
+        return f"File {file_path} does not exist"
+    return path.read_text(encoding="utf-8")  # Specify encoding
 
 
 def write_output(
@@ -103,7 +103,8 @@ def main():
     args = parser.parse_args()
 
     try:
-        text = read_text_file(args.input_file)
+        # FIX: Change 'read_text_file' to 'read_file'
+        text = read_file(args.input_file)  # ← This line was the problem
     except Exception as e:
         print(f"Error reading input file: {e}", file=sys.stderr)
         sys.exit(1)

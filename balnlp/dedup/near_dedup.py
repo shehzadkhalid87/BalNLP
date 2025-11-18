@@ -1,25 +1,24 @@
+from typing import List, Set, Tuple, Union
+
+
 class NearDedup:
     """Remove near duplicates using Jaccard similarity over shingles."""
 
-    def __init__(self, shingle_size=3, threshold=0.8, mode="word"):
-        """
-        Args:
-            shingle_size: Size of shingles (n-grams)
-            threshold: Jaccard similarity threshold (0.0 to 1.0)
-            mode: 'word' for word-level shingles, 'char' for character-level shingles
-        """
+    def __init__(
+        self, shingle_size: int = 1, threshold: float = 0.4, mode: str = "word"
+    ):
         self.shingle_size = shingle_size
         self.threshold = threshold
         self.mode = mode
 
-    def shingles(self, text: str):
+    def shingles(self, text: str) -> Union[Set[Tuple[str, ...]], Set[str]]:
         """Generate shingles based on selected mode."""
         if self.mode == "word":
             return self._word_shingles(text)
         else:  # character level
             return self._char_shingles(text)
 
-    def _word_shingles(self, text: str):
+    def _word_shingles(self, text: str) -> Set[Tuple[str, ...]]:
         """Generate word-level shingles."""
         words = text.split()
         if len(words) < self.shingle_size:
@@ -29,7 +28,7 @@ class NearDedup:
             for i in range(len(words) - self.shingle_size + 1)
         )
 
-    def _char_shingles(self, text: str):
+    def _char_shingles(self, text: str) -> Set[str]:
         """Generate character-level shingles."""
         text = text.strip()
         if len(text) < self.shingle_size:
@@ -39,7 +38,7 @@ class NearDedup:
             for i in range(len(text) - self.shingle_size + 1)
         )
 
-    def jaccard(self, set1, set2):
+    def jaccard(self, set1: Set, set2: Set) -> float:
         """Calculate Jaccard similarity between two sets."""
         if not set1 or not set2:
             return 0.0
@@ -47,13 +46,13 @@ class NearDedup:
         union = len(set1 | set2)
         return intersection / union if union > 0 else 0.0
 
-    def remove_near_duplicates(self, documents):
+    def remove_near_duplicates(self, documents: List[str]) -> List[str]:
         """Remove near-duplicate documents."""
         if not documents:
             return []
 
-        unique = []
-        seen_shingles = []
+        unique: List[str] = []
+        seen_shingles: List[Union[Set[Tuple[str, ...]], Set[str]]] = []  # Fixed type
 
         for doc in documents:
             if not doc or not doc.strip():
