@@ -1,0 +1,1 @@
+python build_corpus.py --input_dir "./raw_data" --output_file "./data/llm_ready_corpus.txt" --dedup-mode near --min-length 25
